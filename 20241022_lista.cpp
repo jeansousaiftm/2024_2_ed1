@@ -58,7 +58,7 @@ struct List {
         last = n;
     }
 
-    void print() { // complexidade de tempo O(n), complexidade de espaço O(1)
+    void print() { // complexidade de tempo O(n), complexidade de espaÃ§o O(1)
         Node* aux = first;
         while (aux != NULL) {
             printf("%d -> ", aux->value);
@@ -82,6 +82,96 @@ struct List {
         return c;
     }
 
+    void popFront() { // O(1)
+        if (empty()) return;
+        if (c == 1) {
+            delete(first);
+            first = NULL;
+            last = NULL;
+            c = 0;
+            return;
+        }
+        Node* toDel = first;
+        first = first->next;
+        delete(toDel);
+        c--;
+    }
+
+    void popBack() { // O(n)
+        if (empty()) return;
+        if (c == 1) {
+            delete(first);
+            first = NULL;
+            last = NULL;
+            c = 0;
+            return;
+        }
+        Node* toDel = last;
+        Node* aux = first;
+        while (aux->next != last) {
+            aux = aux->next;
+        }
+        last = aux;
+        last->next = NULL;
+        delete(toDel);
+        c--;
+    }
+
+    void insert(int value, int pos) { //O(n)
+        if (pos <= 0) {
+            pushFront(value);
+            return;
+        }
+        if (pos >= c) {
+            pushBack(value);
+            return;
+        }
+        Node* aux = first;
+        for (int i = 0; i < pos; i++, aux = aux->next);
+        Node* n = new Node(value);
+        n->next = aux->next;
+        aux->next = n;
+        c++;
+    }
+
+    void remove(int value) { // O(n)
+        if (empty()) return;
+
+        Node *aux = first;
+        Node *prev = NULL;
+        for (int i = 0; i < c; i++) {
+            if (aux->value == value) {
+                if (prev == NULL) {
+                    popFront();
+                } else {
+                    prev->next = aux->next;
+                    delete(aux);
+                    c--;
+                    aux = prev;
+                }
+            }
+            prev = aux;
+            aux = aux->next;
+        }
+    }
+
+    void removeByPos(int pos) { // O(n)
+        if (pos <= 0) {
+            popFront();
+            return;
+        }
+        if (pos >= c) {
+            popBack();
+            return;
+        }
+        Node* aux = first;
+        for (int i = 0; i < pos - 1; i++, aux = aux->next);
+        Node* toDel = aux->next;
+        aux->next = toDel->next;
+        delete(toDel);
+        c--;
+    }
+
 };
 
 int main() {
@@ -91,20 +181,8 @@ int main() {
     l.pushFront(10);
     l.pushFront(3);
     l.pushBack(5);
-    l.pushBack(3);
-    l.pushFront(8);
-    l.pushBack(50);
-    l.pushFront(78);
-    l.pushBack(1);
-    l.pushBack(75);
-    l.pushFront(25);
-    l.pushBack(60);
-    l.pushFront(34);
-    l.pushBack(80);
-    l.pushBack(30);
-    l.pushBack(23);
-    l.pushFront(5);
-    l.pushFront(66);
+
+    l.popBack();
 
     l.print();
 
